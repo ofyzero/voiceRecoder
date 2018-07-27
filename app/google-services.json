@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "908290423225",
+    "firebase_url": "https://voicerecorder-84bc9.firebaseio.com",
+    "project_id": "voicerecorder-84bc9",
+    "storage_bucket": "voicerecorder-84bc9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:908290423225:android:54390c6470ac187a",
+        "android_client_info": {
+          "package_name": "com.zero.alephzero.voicerecoder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "908290423225-8u1utpdg9ga8bd6idn4nrkjt49h5ruo1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zero.alephzero.voicerecoder",
+            "certificate_hash": "82c34694c1d593955a641297e408f04c18f9e112"
+          }
+        },
+        {
+          "client_id": "908290423225-mjd8581hvb8fogrkp0cfnc8rpdp5gf7a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBS81phQt9QpVUnHm52fUzP80ADzHCrz8M"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "908290423225-mjd8581hvb8fogrkp0cfnc8rpdp5gf7a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
