@@ -8,10 +8,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Random;
 
 public class SetLevel {
 
     private static String filename = "level";
+    private static String filename1 = "start";
     private static File folder = new File(Environment.getExternalStorageDirectory() + File.separator + "sesler");
 
     public static void createFile(Context context){
@@ -27,13 +29,19 @@ public class SetLevel {
         }
 
         File file0 = new File(context.getFilesDir(),"level");
+        File file1 = new File(context.getFilesDir(),"start");
+        File file = new File(folder,"texts");
         if (file0.exists()){
             // do nothing, file already here
+
         }else{
-
-            File file = new File(context.getFilesDir(), "level");
-            writeFile(0,context);
-
+            Random rand = new Random();
+            int value = rand.nextInt(47000)+ rand.nextInt(50);
+            file0 = new File(context.getFilesDir(), "level");
+            writeFile(0,context,filename);
+            file1 = new File(context.getFilesDir(), "start");
+            writeFile(value,context,filename1);
+            file = new File(folder,"texts.txt");
         }
     }
 
@@ -47,7 +55,7 @@ public class SetLevel {
         return list.length;
     }
 
-    public static String readFile(Context context){
+    public static String readFile(Context context,String filename){
 
         FileInputStream fileInputStream;
         String fileContent = "";
@@ -88,7 +96,7 @@ public class SetLevel {
         return fileContent;
 
     }
-    public static void writeFile(int level,Context context) {
+    public static void writeFile(int level,Context context,String filename) {
 
 
         String fileContents =  String.valueOf(level);
@@ -97,6 +105,18 @@ public class SetLevel {
         try {
             outputStream = context.openFileOutput(filename, Context.MODE_PRIVATE);
             outputStream.write(fileContents.getBytes());
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public static void writeFile(String text,Context context) {
+
+        FileOutputStream outputStream;
+
+        try {
+            outputStream = context.openFileOutput("texts.txt", Context.MODE_APPEND);
+            outputStream.write(text.getBytes());
             outputStream.close();
         } catch (Exception e) {
             e.printStackTrace();

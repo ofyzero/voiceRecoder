@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -25,10 +26,11 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     //VARIABLES
-    Button play,startRecord,next;
+    Button play,startRecord,next,sil;
     TextView textView;
     ArrayList<String> texts = new ArrayList<String>(); // texts
-    private int textIndex;
+    private int textIndex,current;
+    private int startIndex;
 
     String pathSv = "";
     MediaRecorder mediaRecorder;
@@ -50,22 +52,38 @@ public class MainActivity extends AppCompatActivity {
         next = findViewById(R.id.next);
         textView = findViewById(R.id.text);
         chronometer =findViewById(R.id.chronometer);
+        sil  = findViewById(R.id.Silme);
+
+        startRecord.setBackgroundResource(R.drawable.record);
+        play.setBackgroundResource(R.drawable.play);
+        sil.setBackgroundResource(R.drawable.delete);
 
         // create index file and read
         SetLevel.createFile(getApplicationContext());
-        textIndex = Integer.parseInt( SetLevel.readFile(getApplicationContext()));
+        String temp = SetLevel.readFile(getApplicationContext(),"start");
+        startIndex = Integer.parseInt( SetLevel.readFile(getApplicationContext(),"start"));
+        current = Integer.parseInt( SetLevel.readFile(getApplicationContext(),"level"));
+        textIndex = current + startIndex;
+
+        setTitle("Okunan Yazı No :" +String.valueOf(current)) ;
 
         // read texts
         read("texts.txt");
         // initial text
-        if(textIndex >= texts.size())
-            textIndex = texts.size() -1;
+        if(textIndex >= startIndex + 30 )
+            textIndex = startIndex + 30 -1;
 
         textView.setText(texts.get(textIndex));
         //first permission
         if(!checkPermissionFromDevice())
             requestPermissions();
 
+        sil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteFile();
+            }
+        });
         // next text
         next.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,19 +91,22 @@ public class MainActivity extends AppCompatActivity {
 
                 if(!onRecord && !onPlay ){
 
-                    SetLevel.writeFile(textIndex,getApplicationContext());
-                    if(textIndex < texts.size()){
+                    SetLevel.writeFile(current,getApplicationContext(),"level");
+                    File file = new File(pathSv);
+                    if(file.exists())
+                        SetLevel.writeFile(texts.get(textIndex),getApplicationContext());
+                    setTitle("Okunan Yazı No :" + String.valueOf(current)) ;
+                    if(textIndex < startIndex + 30){
 
                         textView.setText(texts.get(textIndex));
                         textIndex++;
+                        current++;
                     }
-
                 }
-                if(textIndex == texts.size()){
+                if(textIndex == startIndex + 30){
 
                     Intent intent = new Intent(MainActivity.this,Upload.class);
                     startActivity(intent);
-
                 }
             }
         });
@@ -115,7 +136,8 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     // change button text
-                    startRecord.setText("BİTİR");
+                    startRecord.setBackgroundResource(R.drawable.finish);
+                    //startRecord.setText("BİTİR");
                     // close play button
                     play.setEnabled(false);
                     // start counter
@@ -131,7 +153,8 @@ public class MainActivity extends AppCompatActivity {
                 stopChronometer();
                 onRecord = false;
                 // change button name
-                startRecord.setText("BAŞLA");
+                startRecord.setBackgroundResource(R.drawable.record);
+                //startRecord.setText("BAŞLA");
                 mediaRecorder.stop();
 
                 play.setEnabled(true);
@@ -147,7 +170,9 @@ public class MainActivity extends AppCompatActivity {
                 if(!onPlay){
 
                     onPlay = true;
-                    play.setText("DURDUR");
+
+                    play.setBackgroundResource(R.drawable.pause);
+                    //play.setText("DURDUR");
                     startRecord.setEnabled(false);
 
                     mediaPlayer = new MediaPlayer();
@@ -164,7 +189,8 @@ public class MainActivity extends AppCompatActivity {
                 }else{
 
                     onPlay = false;
-                    play.setText("OYNAT");
+                    play.setBackgroundResource(R.drawable.play);
+                    //play.setText("OYNAT");
 
                     startRecord.setEnabled(true);
 
@@ -185,6 +211,14 @@ public class MainActivity extends AppCompatActivity {
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
         mediaRecorder.setOutputFile(pathSv);
+    }
+    private void deleteFile(){
+
+        File file = new File(pathSv);
+        if (file.exists())
+            file.delete();
+
+
     }
     private void requestPermissions() {
 
