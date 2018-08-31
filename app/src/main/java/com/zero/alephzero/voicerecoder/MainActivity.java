@@ -30,8 +30,11 @@ public class MainActivity extends AppCompatActivity {
     TextView textView;
     ArrayList<String> texts = new ArrayList<String>(); // texts
     private int textIndex,current;
-    private int startIndex;
+    private int startIndex,endIndex;
 
+    String[] introText = {"Merhaba, uygulamamıza vakit ayırdığınız için çok teşekkür ederiz. Bu programda, 2-7 cümle uzunluğunda 30 kısa metni okuyup, kaydetmenizi rica ediyoruz.Okumaya başlamadan önce kayıt tuşuna basın ve bitince yine aynı tuşa basarak kaydı bitirin. Bir sonraki parçaya geçmek için sıradaki tuşuna basın" ,
+            " Eğer okuduğunuz parçayı dinlemek isterseniz oynat tuşuna basın. Oynatma işlemi bitince, aynı tuşa, bitir tuşuna bastıktan sonra bir sonraki parçayı okumaya başlayabilirsiniz. Yanlış okuduysanız veya iyi olmadığını düşünüyorsanız, sil tuşu ile kaydı silip aynı metni tekrar kaydedebilirsiniz.Parçalar bitince okuduklarınızı otomatik olarak bize göndereceğiniz bir ekran göreceksiniz. Şimdi okumaya başlayabilirsiniz.",
+            " İsminizi ve soyadınızı yazıp, gönder tuşuna bastıktan sonra gönderme işlemi otomatik olarak başlayacaktır. Bu işlem yaklaşık olarak 5 dakika kadar sürecektir. Lütfen 5 dakika programı kapatmayın ve başka ekrana geçmeyin. Yardımınız için çok teşekkür ederiz." ,};
     String pathSv = "";
     MediaRecorder mediaRecorder;
     MediaPlayer mediaPlayer;
@@ -41,18 +44,23 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean onRecord = false;
     private boolean onPlay = false;
+    private boolean intro = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //first permission
+        if(!checkPermissionFromDevice())
+            requestPermissions();
         //Buttons
         play = findViewById(R.id.PlayButton);
         startRecord = findViewById(R.id.StartRecordButton);
         next = findViewById(R.id.next);
         textView = findViewById(R.id.text);
-        chronometer =findViewById(R.id.chronometer);
-        sil  = findViewById(R.id.Silme);
+        chronometer = findViewById(R.id.chronometer);
+        sil = findViewById(R.id.Silme);
 
         startRecord.setBackgroundResource(R.drawable.record);
         play.setBackgroundResource(R.drawable.play);
@@ -60,23 +68,34 @@ public class MainActivity extends AppCompatActivity {
 
         // create index file and read
         SetLevel.createFile(getApplicationContext());
-        String temp = SetLevel.readFile(getApplicationContext(),"start");
-        startIndex = Integer.parseInt( SetLevel.readFile(getApplicationContext(),"start"));
-        current = Integer.parseInt( SetLevel.readFile(getApplicationContext(),"level"));
+        startIndex = Integer.parseInt(SetLevel.readFile(getApplicationContext(), "start"));
+        current = Integer.parseInt(SetLevel.readFile(getApplicationContext(), "level"));
         textIndex = current + startIndex;
+        endIndex = startIndex + 30;
 
-        setTitle("Okunan Yazı No :" +String.valueOf(current)) ;
 
         // read texts
         read("texts.txt");
         // initial text
-        if(textIndex >= startIndex + 30 )
-            textIndex = startIndex + 30 -1;
+        setTitle("Ses Kaydına Başlamdan Önce");
 
-        textView.setText(texts.get(textIndex));
-        //first permission
-        if(!checkPermissionFromDevice())
-            requestPermissions();
+        if (current == 1000) {
+            intro = true;
+            textView.setText(introText[0]);
+        } else if (current == 1001){
+            textView.setText(introText[1]);
+            intro = true;
+        }else if (current == 2002) {
+            setTitle("Dosya Yüklemesine Başlamdan Önce");
+            textView.setText(introText[2]);
+
+        }else{
+            setTitle("Okunan Yazı No :" + String.valueOf(current));
+            textView.setText(texts.get(textIndex));
+
+        }
+
+
 
         sil.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,25 +107,41 @@ public class MainActivity extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (current == 2002){
+                    setTitle("Dosya Yüklemesine Başlamdan Önce");
+                    Intent intent = new Intent(MainActivity.this,Upload.class);
+                    startActivity(intent);
+                }
+                if(textIndex == endIndex ){//reading is finihed.
+                    current = 2002;
+                    SetLevel.writeFile(2002  ,getApplicationContext(),"level");
+                    setTitle("Dosya Yüklemesine Başlamdan Önce");
+                }
+                if(!onRecord && !onPlay && !intro &&  ( current > 1002 || current < 1000 ) ){
 
-                if(!onRecord && !onPlay ){
-
-                    SetLevel.writeFile(current,getApplicationContext(),"level");
-                    File file = new File(pathSv);
+                    SetLevel.writeFile(current  ,getApplicationContext(),"level");
+                    File file = new File(pathSv); // check to record is exist
                     if(file.exists())
-                        SetLevel.writeFile(texts.get(textIndex),getApplicationContext());
+                        SetLevel.writeFile(getApplicationContext(),texts.get(textIndex)); //record exits , save content of the record
                     setTitle("Okunan Yazı No :" + String.valueOf(current)) ;
-                    if(textIndex < startIndex + 30){
+                    if(textIndex < endIndex){
 
                         textView.setText(texts.get(textIndex));
                         textIndex++;
                         current++;
                     }
                 }
-                if(textIndex == startIndex + 30){
-
-                    Intent intent = new Intent(MainActivity.this,Upload.class);
-                    startActivity(intent);
+                if (intro){// if in the intro
+                    current++;
+                    SetLevel.writeFile(current  ,getApplicationContext(),"level");
+                    if (current == 1001){// pass intro
+                        SetLevel.writeFile(0,getApplicationContext(),"level");
+                        textView.setText(introText[1]);
+                        intro = false;
+                        current = 0;
+                        textIndex = current + startIndex;
+                        endIndex = startIndex + 30;
+                    }
                 }
             }
         });
@@ -142,13 +177,11 @@ public class MainActivity extends AppCompatActivity {
                     play.setEnabled(false);
                     // start counter
                     startChronometer();
-
                     Toast.makeText(MainActivity.this,"Recording...",Toast.LENGTH_SHORT).show();
                 }else
                     requestPermissions();
 
             }else {
-
                 // stop record and counter
                 stopChronometer();
                 onRecord = false;
@@ -160,7 +193,6 @@ public class MainActivity extends AppCompatActivity {
                 play.setEnabled(true);
             }
             }
-
         });
 
         // play last record and stop
@@ -258,6 +290,8 @@ public class MainActivity extends AppCompatActivity {
     public void stopChronometer() {
        chronometer.stop();
     }
+
+    //this function add text to array
     private void read(String filename){
         String text = "";
 

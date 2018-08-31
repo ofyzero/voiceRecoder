@@ -8,19 +8,25 @@
     android:layout_gravity="center"
     tools:context=".MainActivity">
 
-        <TextView
-            android:id="@+id/text"
-            android:textSize="23dp"
+        <ScrollView
+            android:id="@+id/scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="150dp"
-            android:layout_marginLeft="20dp"
-            />
+            android:layout_marginLeft="20dp">
+            <TextView
+                android:id="@+id/text"
+                android:textSize="23dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                    />
+        </ScrollView>
+
         <android.support.constraint.ConstraintLayout
                 android:id="@+id/activity_main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/text">
+                app:layout_constraintTop_toBottomOf="@+id/scroll">
                 <Chronometer
                     android:id="@+id/chronometer"
                     android:textSize="50dp"

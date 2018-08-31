@@ -16,6 +16,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class Upload extends AppCompatActivity {
 
@@ -24,7 +25,11 @@ public class Upload extends AppCompatActivity {
     EditText name;
     String id;
     private int textIndex;
+    private int textIndexBitti;
     int i = 0;
+
+    ArrayList<String> filenames = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,8 +38,8 @@ public class Upload extends AppCompatActivity {
         name = findViewById(R.id.editText);
         upload = findViewById(R.id.Upload);
 
-        textIndex = SetLevel.fileNumber();
-
+        textIndexBitti = SetLevel.fileNumber();
+        textIndex = Integer.parseInt(SetLevel.readFile(getApplicationContext(), "start"));
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -42,6 +47,7 @@ public class Upload extends AppCompatActivity {
                 id = String.valueOf(name.getText());
                 if( id != null ) {
                     mStorageRef = FirebaseStorage.getInstance().getReference();
+                    getNames();
                     uploadOne();
                 }else {
                     Toast.makeText(Upload.this,"Lütfen isim yazın",Toast.LENGTH_SHORT);
@@ -51,31 +57,45 @@ public class Upload extends AppCompatActivity {
     }
 
     private void uploadOne(){
-        if(i == textIndex){
+        if(i == textIndexBitti){
             Toast.makeText(Upload.this,"Bitti.",Toast.LENGTH_SHORT);
         }else {
+            for(String path : filenames){
 
-            Uri file = Uri.fromFile(new File(SetLevel.getFilename() + "text" + String.valueOf(i) + ".3gp"));
-            StorageReference riversRef = mStorageRef.child("sesler-" + id + "/" + file.getLastPathSegment());
+                Uri file = Uri.fromFile(new File (SetLevel.getFilename() + path));
+                StorageReference riversRef = mStorageRef.child("sesler-" + id + "/" + file.getLastPathSegment());
 
-            riversRef.putFile(file)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            // Get a URL to the uploaded content
-                            Toast.makeText(Upload.this, "Dosya yülendi.", Toast.LENGTH_SHORT);
-                            i++;
-                            uploadOne();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Handle unsuccessful uploads
-                            // ...
-                            Toast.makeText(Upload.this, "Failed", Toast.LENGTH_SHORT);
-                        }
-                    });
+                riversRef.putFile(file)
+                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                // Get a URL to the uploaded content
+                                Toast.makeText(Upload.this, "Dosya yülendi.", Toast.LENGTH_SHORT);
+
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle unsuccessful uploads
+                                // ...
+                                Toast.makeText(Upload.this, "Failed", Toast.LENGTH_SHORT);
+                            }
+                        });
+            }
+        }
+
+    }
+    private void getNames(){
+        File folder = new File(SetLevel.getFilename());
+        File[] listOfFiles = folder.listFiles();
+
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile()) {
+                filenames.add(listOfFiles[i].getName());
+                //System.out.println("File " + listOfFiles[i].getName());
+            }
         }
     }
+
 }
