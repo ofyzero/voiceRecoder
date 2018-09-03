@@ -32,9 +32,9 @@ public class MainActivity extends AppCompatActivity {
     private int textIndex,current;
     private int startIndex,endIndex;
 
-    String[] introText = {"Merhaba, uygulamamıza vakit ayırdığınız için çok teşekkür ederiz. Bu programda, 2-7 cümle uzunluğunda 30 kısa metni okuyup, kaydetmenizi rica ediyoruz.Okumaya başlamadan önce kayıt tuşuna basın ve bitince yine aynı tuşa basarak kaydı bitirin. Bir sonraki parçaya geçmek için sıradaki tuşuna basın" ,
-            " Eğer okuduğunuz parçayı dinlemek isterseniz oynat tuşuna basın. Oynatma işlemi bitince, aynı tuşa, bitir tuşuna bastıktan sonra bir sonraki parçayı okumaya başlayabilirsiniz. Yanlış okuduysanız veya iyi olmadığını düşünüyorsanız, sil tuşu ile kaydı silip aynı metni tekrar kaydedebilirsiniz.Parçalar bitince okuduklarınızı otomatik olarak bize göndereceğiniz bir ekran göreceksiniz. Şimdi okumaya başlayabilirsiniz.",
-            " İsminizi ve soyadınızı yazıp, gönder tuşuna bastıktan sonra gönderme işlemi otomatik olarak başlayacaktır. Bu işlem yaklaşık olarak 5 dakika kadar sürecektir. Lütfen 5 dakika programı kapatmayın ve başka ekrana geçmeyin. Yardımınız için çok teşekkür ederiz." ,};
+    String[] introText = {"     Merhaba, uygulamamıza vakit ayırdığınız için çok teşekkür ederiz. Bu programda, 2-7 cümle uzunluğunda 30 kısa metni okuyup, kaydetmenizi rica ediyoruz.     Okumaya başlamadan önce kayıt tuşuna basın ve bitince yine aynı tuşa basarak kaydı bitirin. Bir sonraki parçaya geçmek için sıradaki tuşuna basın" ,
+            "     Eğer okuduğunuz parçayı dinlemek isterseniz oynat tuşuna basın. Oynatma işlemi bitince, aynı tuşa, bitir tuşuna bastıktan sonra bir sonraki parçayı okumaya başlayabilirsiniz. Yanlış okuduysanız veya iyi olmadığını düşünüyorsanız, sil tuşu ile kaydı silip aynı metni tekrar kaydedebilirsiniz.Parçalar bitince okuduklarınızı otomatik olarak bize göndereceğiniz bir ekran göreceksiniz. Şimdi okumaya başlayabilirsiniz.",
+            "     İsminizi ve soyadınızı yazıp, gönder tuşuna bastıktan sonra gönderme işlemi otomatik olarak başlayacaktır. Bu işlem yaklaşık olarak 5 dakika kadar sürecektir. Lütfen 5 dakika programı kapatmayın ve başka ekrana geçmeyin. Yardımınız için çok teşekkür ederiz." ,};
     String pathSv = "";
     MediaRecorder mediaRecorder;
     MediaPlayer mediaPlayer;
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         // read texts
         read("texts.txt");
         // initial text
-        setTitle("Ses Kaydına Başlamdan Önce");
+        setTitle("  Ses Kaydına Başlamadan Önce");
 
         if (current == 1000) {
             intro = true;
@@ -86,11 +86,11 @@ public class MainActivity extends AppCompatActivity {
             textView.setText(introText[1]);
             intro = true;
         }else if (current == 2002) {
-            setTitle("Dosya Yüklemesine Başlamdan Önce");
+            setTitle("  Dosyaları Yüklemeden Önce");
             textView.setText(introText[2]);
 
         }else{
-            setTitle("Okunan Yazı No :" + String.valueOf(current));
+            setTitle("  Okunan Yazı No :" + String.valueOf(current));
             textView.setText(texts.get(textIndex));
 
         }
@@ -108,14 +108,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (current == 2002){
-                    setTitle("Dosya Yüklemesine Başlamdan Önce");
+                    setTitle("  Dosyaları Yüklemeden Önce");
                     Intent intent = new Intent(MainActivity.this,Upload.class);
                     startActivity(intent);
                 }
                 if(textIndex == endIndex ){//reading is finihed.
                     current = 2002;
                     SetLevel.writeFile(2002  ,getApplicationContext(),"level");
-                    setTitle("Dosya Yüklemesine Başlamdan Önce");
+                    setTitle("  Dosyaları Yüklemeden Önce");
                 }
                 if(!onRecord && !onPlay && !intro &&  ( current > 1002 || current < 1000 ) ){
 
@@ -123,7 +123,10 @@ public class MainActivity extends AppCompatActivity {
                     File file = new File(pathSv); // check to record is exist
                     if(file.exists())
                         SetLevel.writeFile(getApplicationContext(),texts.get(textIndex)); //record exits , save content of the record
-                    setTitle("Okunan Yazı No :" + String.valueOf(current)) ;
+                    if ( current == 2002)
+                        setTitle("  Dosyaları Yüklemeden Önce");
+                    else
+                        setTitle("  Okunan Yazı No :" + String.valueOf(current)) ;
                     if(textIndex < endIndex){
 
                         textView.setText(texts.get(textIndex));

@@ -46,6 +46,7 @@ public class Upload extends AppCompatActivity {
 
                 id = String.valueOf(name.getText());
                 if( id != null ) {
+                    Toast.makeText(Upload.this,"Yükleme Başladı.",Toast.LENGTH_SHORT);
                     mStorageRef = FirebaseStorage.getInstance().getReference();
                     getNames();
                     uploadOne();
