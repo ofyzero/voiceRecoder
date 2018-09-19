@@ -7,9 +7,9 @@
     tools:context=".Upload">
     <TextView
         android:id="@+id/UploadText"
-        android:text="     Lütfen 5 dakika kadar programı kapatmayın ve başka ekrana geçmeyin. Yardımınız için teşekkür ederiz."
+        android:text="          İsminizi yazıp yükle tuşuna bastıktan sonra lütfen 5 dakika kadar programı kapatmayın ve başka ekrana geçmeyin. Yardımınız için teşekkür ederiz."
         android:layout_width="match_parent"
-        android:textSize="30dp"
+        android:textSize="20dp"
         android:layout_height="wrap_content" />
     <EditText
 
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:ems="20"
         android:inputType="textPersonName"
-        android:textSize="25dp"
+        android:textSize="20dp"
         android:hint="Ad ve Soyad" />
 
     <Button
@@ -30,5 +30,12 @@
         android:textColor="@color/colorPrimaryDark"
         android:textSize="40dp"
         app:layout_constraintTop_toBottomOf="@+id/editText" />
+
+    <TextView
+        android:id="@+id/mTextField"
+        app:layout_constraintTop_toBottomOf="@+id/Upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="40dp"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -7,7 +7,6 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -32,9 +31,9 @@ public class MainActivity extends AppCompatActivity {
     private int textIndex,current;
     private int startIndex,endIndex;
 
-    String[] introText = {"     Merhaba, uygulamamıza vakit ayırdığınız için çok teşekkür ederiz. Bu programda, 2-7 cümle uzunluğunda 30 kısa metni okuyup, kaydetmenizi rica ediyoruz.     Okumaya başlamadan önce kayıt tuşuna basın ve bitince yine aynı tuşa basarak kaydı bitirin. Bir sonraki parçaya geçmek için sıradaki tuşuna basın" ,
-            "     Eğer okuduğunuz parçayı dinlemek isterseniz oynat tuşuna basın. Oynatma işlemi bitince, aynı tuşa, bitir tuşuna bastıktan sonra bir sonraki parçayı okumaya başlayabilirsiniz. Yanlış okuduysanız veya iyi olmadığını düşünüyorsanız, sil tuşu ile kaydı silip aynı metni tekrar kaydedebilirsiniz.Parçalar bitince okuduklarınızı otomatik olarak bize göndereceğiniz bir ekran göreceksiniz. Şimdi okumaya başlayabilirsiniz.",
-            "     İsminizi ve soyadınızı yazıp, gönder tuşuna bastıktan sonra gönderme işlemi otomatik olarak başlayacaktır. Bu işlem yaklaşık olarak 5 dakika kadar sürecektir. Lütfen 5 dakika programı kapatmayın ve başka ekrana geçmeyin. Yardımınız için çok teşekkür ederiz." ,};
+    String[] introText = {"     Merhaba, uygulamamıza vakit ayırdığınız için çok teşekkür ederiz. Bu programda, 2-7 cümle uzunluğunda 30 kısa metni okuyup, kaydetmenizi rica ediyoruz.     \nOkumaya başlamadan önce kayıt tuşuna basın ve bitince yine aynı tuşa basarak kaydı bitirin. Devam etmek için ve okurken bir sonraki parçaya geçmek için sıradaki tuşuna basın." ,
+            "     Eğer okuduğunuz parçayı dinlemek isterseniz oynat tuşuna basın. Oynatma işlemi bitince, aynı tuşa, bitir tuşuna bastıktan sonra bir sonraki parçayı okumaya başlayabilirsiniz.     \nYanlış okuduysanız veya iyi olmadığını düşünüyorsanız, sil tuşu ile kaydı silip aynı metni tekrar kaydedebilirsiniz.Parçalar bitince okuduklarınızı otomatik olarak bize göndereceğiniz bir ekran göreceksiniz. Şimdi okumaya başlayabilirsiniz.",
+            "     Okuma kısmı sona erdi. İsminizi ve soyadınızı yazıp, gönder tuşuna bastıktan sonra gönderme işlemi otomatik olarak başlayacaktır. Bu işlem yaklaşık olarak 5 dakika kadar sürecektir. Lütfen yükleme yapmak için SIRADAKİ tuşuna basın."};
     String pathSv = "";
     MediaRecorder mediaRecorder;
     MediaPlayer mediaPlayer;
@@ -90,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             textView.setText(introText[2]);
 
         }else{
-            setTitle("  Okunan Yazı No :" + String.valueOf(current));
+            setTitle("  Okunan Yazı No: " + String.valueOf(current));
             textView.setText(texts.get(textIndex));
 
         }
@@ -101,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 deleteFile();
+                Toast.makeText(MainActivity.this,"Dosya silindi.",Toast.LENGTH_SHORT).show();
             }
         });
         // next text
@@ -116,17 +116,18 @@ public class MainActivity extends AppCompatActivity {
                     current = 2002;
                     SetLevel.writeFile(2002  ,getApplicationContext(),"level");
                     setTitle("  Dosyaları Yüklemeden Önce");
+                    textView.setText(introText[2]);
                 }
-                if(!onRecord && !onPlay && !intro &&  ( current > 1002 || current < 1000 ) ){
+                if(!onRecord && !onPlay && !intro &&  ( current > 2002 || current < 1000 ) ){
 
                     SetLevel.writeFile(current  ,getApplicationContext(),"level");
                     File file = new File(pathSv); // check to record is exist
                     if(file.exists())
                         SetLevel.writeFile(getApplicationContext(),texts.get(textIndex)); //record exits , save content of the record
-                    if ( current == 2002)
+                    /*if ( current == 2002)
                         setTitle("  Dosyaları Yüklemeden Önce");
-                    else
-                        setTitle("  Okunan Yazı No :" + String.valueOf(current)) ;
+                    else*/
+                        setTitle("  Okunan Yazı No: " + String.valueOf(current)) ;
                     if(textIndex < endIndex){
 
                         textView.setText(texts.get(textIndex));
@@ -263,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
         },REQUEST_PERMISSION_CODE);
     }
 
-    @Override
+    /*@Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
             case REQUEST_PERMISSION_CODE:{
@@ -275,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
         }
-    }
+    }*/
 
     private boolean checkPermissionFromDevice(){
 

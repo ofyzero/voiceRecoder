@@ -6,8 +6,8 @@ android {
         applicationId "com.zero.alephzero.voicerecoder"
         minSdkVersion 18
         targetSdkVersion 26
-        versionCode 9
-        versionName "9.0"
+        versionCode 13
+        versionName "13.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

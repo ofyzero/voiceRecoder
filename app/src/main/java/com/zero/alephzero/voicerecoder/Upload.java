@@ -2,11 +2,13 @@ package com.zero.alephzero.voicerecoder;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,6 +28,8 @@ public class Upload extends AppCompatActivity {
     String id;
     private int textIndex;
     private int textIndexBitti;
+    private TextView mTextField;
+
     int i = 0;
 
     ArrayList<String> filenames = new ArrayList<>();
@@ -34,9 +38,9 @@ public class Upload extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload);
-
         name = findViewById(R.id.editText);
         upload = findViewById(R.id.Upload);
+        mTextField = findViewById(R.id.mTextField);
 
         textIndexBitti = SetLevel.fileNumber();
         textIndex = Integer.parseInt(SetLevel.readFile(getApplicationContext(), "start"));
@@ -50,6 +54,16 @@ public class Upload extends AppCompatActivity {
                     mStorageRef = FirebaseStorage.getInstance().getReference();
                     getNames();
                     uploadOne();
+                    new CountDownTimer(300000, 1000) {
+
+                        public void onTick(long millisUntilFinished) {
+                            mTextField.setText("Kalan Süre ( saniye ) : " + millisUntilFinished / 1000);
+                        }
+
+                        public void onFinish() {
+                            mTextField.setText("Yükleme tamamlandı!");
+                        }
+                    }.start();
                 }else {
                     Toast.makeText(Upload.this,"Lütfen isim yazın",Toast.LENGTH_SHORT);
                 }
