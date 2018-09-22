@@ -61,9 +61,9 @@ public class MainActivity extends AppCompatActivity {
         chronometer = findViewById(R.id.chronometer);
         sil = findViewById(R.id.Silme);
 
-        startRecord.setBackgroundResource(R.drawable.record);
-        play.setBackgroundResource(R.drawable.play);
-        sil.setBackgroundResource(R.drawable.delete);
+        startRecord.setBackgroundResource(R.drawable.record3);
+        play.setBackgroundResource(R.drawable.play3);
+        sil.setBackgroundResource(R.drawable.delete2);
 
         // create index file and read
         SetLevel.createFile(getApplicationContext());
@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     // change button text
-                    startRecord.setBackgroundResource(R.drawable.finish);
+                    startRecord.setBackgroundResource(R.drawable.finish2);
                     //startRecord.setText("BİTİR");
                     // close play button
                     play.setEnabled(false);
@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
                 stopChronometer();
                 onRecord = false;
                 // change button name
-                startRecord.setBackgroundResource(R.drawable.record);
+                startRecord.setBackgroundResource(R.drawable.record3);
                 //startRecord.setText("BAŞLA");
                 mediaRecorder.stop();
 
@@ -207,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
 
                     onPlay = true;
 
-                    play.setBackgroundResource(R.drawable.pause);
+                    play.setBackgroundResource(R.drawable.pause3);
                     //play.setText("DURDUR");
                     startRecord.setEnabled(false);
 
@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
                 }else{
 
                     onPlay = false;
-                    play.setBackgroundResource(R.drawable.play);
+                    play.setBackgroundResource(R.drawable.play3);
                     //play.setText("OYNAT");
 
                     startRecord.setEnabled(true);

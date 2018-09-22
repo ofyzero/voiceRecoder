@@ -12,14 +12,20 @@
             android:id="@+id/scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="150dp"
-            android:layout_marginLeft="20dp">
-            <TextView
-                android:id="@+id/text"
-                android:textSize="23dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                    />
+            android:layout_marginBottom="144dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="18dp" />
         </ScrollView>
 
         <android.support.constraint.ConstraintLayout
@@ -34,35 +40,60 @@
                     app:layout_constraintRight_toRightOf="@+id/activity_main"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
+
                 <Button
                     android:id="@+id/StartRecordButton"
-                    app:layout_constraintTop_toBottomOf="@+id/chronometer"
-                    android:textSize="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <Button
-                    android:id="@+id/PlayButton"
-                    android:textSize="20dp"
-                    app:layout_constraintLeft_toRightOf="@+id/StartRecordButton"
-                    app:layout_constraintTop_toBottomOf="@id/chronometer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <Button
-                    android:id="@+id/next"
-                    android:text="SIRADAKİ"
-                    android:textSize="20dp"
-                    app:layout_constraintLeft_toRightOf="@+id/PlayButton"
-                    app:layout_constraintTop_toBottomOf="@id/chronometer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
                     android:textSize="20dp"
-                    app:layout_constraintLeft_toRightOf="@+id/next"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/PlayButton"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/chronometer" />
+
+                <Button
+                    android:id="@+id/PlayButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:textSize="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/next"
+                    app:layout_constraintLeft_toRightOf="@+id/StartRecordButton"
+                    app:layout_constraintTop_toBottomOf="@id/chronometer" />
+
+                <Button
+                    android:id="@+id/next"
+                    android:layout_width="80dp"
+                    android:layout_height="65dp"
+                    android:layout_marginBottom="32dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/next3"
+                    android:textSize="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/Silme"
+                    app:layout_constraintLeft_toRightOf="@+id/PlayButton"
                     app:layout_constraintTop_toBottomOf="@id/chronometer"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <Button
                     android:id="@+id/Silme"
-                    />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:textSize="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/next"
+                    app:layout_constraintTop_toBottomOf="@id/chronometer" />
 
         </android.support.constraint.ConstraintLayout>
 
