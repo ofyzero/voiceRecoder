@@ -8,12 +8,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -23,13 +25,15 @@ import java.util.ArrayList;
 public class Upload extends AppCompatActivity {
 
     private StorageReference mStorageRef;
+    ProgressBar progressBar;
     Button upload;
     EditText name;
     String id;
     private int textIndex;
     private int textIndexBitti;
     private TextView mTextField;
-
+    int totalBytes, currentBytes;
+    double progress = 0;
     int i = 0;
 
     ArrayList<String> filenames = new ArrayList<>();
@@ -41,7 +45,7 @@ public class Upload extends AppCompatActivity {
         name = findViewById(R.id.editText);
         upload = findViewById(R.id.Upload);
         mTextField = findViewById(R.id.mTextField);
-
+        progressBar = findViewById(R.id.progressBar);
         textIndexBitti = SetLevel.fileNumber();
         textIndex = Integer.parseInt(SetLevel.readFile(getApplicationContext(), "start"));
         upload.setOnClickListener(new View.OnClickListener() {
@@ -79,24 +83,46 @@ public class Upload extends AppCompatActivity {
 
                 Uri file = Uri.fromFile(new File (SetLevel.getFilename() + path));
                 StorageReference riversRef = mStorageRef.child("sesler-" + id + "/" + file.getLastPathSegment());
+                UploadTask uploadTask = riversRef.putFile(file);
+                uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        totalBytes = (int) taskSnapshot.getTotalByteCount();
+                        currentBytes = (int) taskSnapshot.getBytesTransferred();
+                        progress = (100.0*currentBytes)/totalBytes;
+                        progressBar.setProgress((int) progress);
+                    }
+                });
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(Upload.this, "Dosya yülendi.", Toast.LENGTH_SHORT);
+                    }
+                });
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(Upload.this, "Failed", Toast.LENGTH_SHORT);
+                    }
+                });
 
-                riversRef.putFile(file)
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                // Get a URL to the uploaded content
-                                Toast.makeText(Upload.this, "Dosya yülendi.", Toast.LENGTH_SHORT);
-
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                // Handle unsuccessful uploads
-                                // ...
-                                Toast.makeText(Upload.this, "Failed", Toast.LENGTH_SHORT);
-                            }
-                        });
+//                riversRef.putFile(file)
+//                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                            @Override
+//                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                                // Get a URL to the uploaded content
+//                                Toast.makeText(Upload.this, "Dosya yülendi.", Toast.LENGTH_SHORT);
+//
+//                            }
+//                        })
+//                        .addOnFailureListener(new OnFailureListener() {
+//                            @Override
+//                            public void onFailure(@NonNull Exception exception) {
+//                                // Handle unsuccessful uploads
+//                                // ...
+//                                Toast.makeText(Upload.this, "Failed", Toast.LENGTH_SHORT);
+//                            }
+//                        });
             }
         }
 
