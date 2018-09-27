@@ -46,6 +46,8 @@ public class Upload extends AppCompatActivity {
         upload = findViewById(R.id.Upload);
         mTextField = findViewById(R.id.mTextField);
         progressBar = findViewById(R.id.progressBar);
+        progressBar.setMax(100);
+        progressBar.setProgress(20);
         textIndexBitti = SetLevel.fileNumber();
         textIndex = Integer.parseInt(SetLevel.readFile(getApplicationContext(), "start"));
         upload.setOnClickListener(new View.OnClickListener() {
@@ -88,6 +90,8 @@ public class Upload extends AppCompatActivity {
                     @Override
                     public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                         totalBytes = (int) taskSnapshot.getTotalByteCount();
+                        String strTot = String.valueOf(totalBytes);
+                        Toast.makeText(Upload.this, strTot, Toast.LENGTH_SHORT);
                         currentBytes = (int) taskSnapshot.getBytesTransferred();
                         progress = (100.0*currentBytes)/totalBytes;
                         progressBar.setProgress((int) progress);
