@@ -32,6 +32,7 @@ public class Upload extends AppCompatActivity {
     private int textIndex;
     private int textIndexBitti;
     private TextView mTextField;
+    private TextView totalByteText;
     int totalBytes, currentBytes;
     double progress = 0;
     int i = 0;
@@ -44,7 +45,8 @@ public class Upload extends AppCompatActivity {
         setContentView(R.layout.activity_upload);
         name = findViewById(R.id.editText);
         upload = findViewById(R.id.Upload);
-        mTextField = findViewById(R.id.mTextField);
+        totalByteText = findViewById(R.id.textView5);
+        //mTextField = findViewById(R.id.mTextField);
         progressBar = findViewById(R.id.progressBar);
         progressBar.setMax(100);
         progressBar.setProgress(20);
@@ -60,6 +62,7 @@ public class Upload extends AppCompatActivity {
                     mStorageRef = FirebaseStorage.getInstance().getReference();
                     getNames();
                     uploadOne();
+                    /*
                     new CountDownTimer(300000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
@@ -69,7 +72,7 @@ public class Upload extends AppCompatActivity {
                         public void onFinish() {
                             mTextField.setText("Yükleme tamamlandı!");
                         }
-                    }.start();
+                    }.start();*/
                 }else {
                     Toast.makeText(Upload.this,"Lütfen isim yazın",Toast.LENGTH_SHORT);
                 }
@@ -91,6 +94,7 @@ public class Upload extends AppCompatActivity {
                     public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                         totalBytes = (int) taskSnapshot.getTotalByteCount();
                         String strTot = String.valueOf(totalBytes);
+                        totalByteText.setText(strTot);
                         Toast.makeText(Upload.this, strTot, Toast.LENGTH_SHORT);
                         currentBytes = (int) taskSnapshot.getBytesTransferred();
                         progress = (100.0*currentBytes)/totalBytes;
